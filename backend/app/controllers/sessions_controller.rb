@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
         if @user&.authenticate(params[:password])
             render json: { token: "" }, status: 200
         else
-            render json: { error: "Email e/ou Senha inválido!" }, status: 403
+            render json: { error: "Credenciais inválidas!" }, status: 403
         end
     end
 end
