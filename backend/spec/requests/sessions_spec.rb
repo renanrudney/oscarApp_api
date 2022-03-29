@@ -4,12 +4,13 @@ RSpec.describe "Sessions", type: :request do
   describe "POST /auth (login)" do
     it "returns 200 if valid credentials is provided" do
       user = create(:user)
+      token = create(:token, user: user)
       post "/auth", params: { email: user.email, password: user.password }
 
       expect(response).to have_http_status(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
-      expect(data[:token]).to be_truthy
+      expect(data[:token]).to eq(token.token_number)
     end
 
     it "returns 403 if invalid credentials is provided" do
