@@ -14,6 +14,6 @@
 #
 FactoryBot.define do
   factory :token do
-    user {}
+    user { User.first }
   end
 end
