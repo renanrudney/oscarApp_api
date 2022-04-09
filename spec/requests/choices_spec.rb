@@ -1,13 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe "Choices", type: :request do
-  context "POST /choices" do
+  describe "POST /choices" do
+    let(:user) { create(:user) }
+    let(:token) { create(:token, user: user) }
+    let(:remote_movie_id) { rand(1..10) }
+    let(:remote_director_id) { rand(1..10) }
+    let(:headers) {{ login: user.login, token: token.token_number }}
+    let(:params) {{ choice: { remote_movie_id: remote_movie_id, remote_director_id: remote_director_id }}}
+
     it "returns 200 if valid choices is provided" do
-      user = create(:user)
-      token = create(:token, user: user)
-      remote_movie_id = rand(1..10)
-      remote_director_id = rand(1..10)
-      post "/choices", headers: { login: user.login, token: token.token_number }, params: { choice: { remote_movie_id: remote_movie_id, remote_director_id: remote_director_id } }
+      post "/choices", headers: headers, params: params
 
       expect(response).to have_http_status(200)
 
@@ -17,10 +20,8 @@ RSpec.describe "Choices", type: :request do
     end
 
     it "returns 422 if choice already exists" do
-        user = create(:user)
-        token = create(:token, user: user)
-        choice = create(:choice, user: user)
-        post "/choices", headers: { login: user.login, token: token.token_number }, params: { choice: { remote_movie_id: rand(1..10), remote_director_id: rand(1..10) } }
+        create(:choice, user: user)
+        post "/choices", headers: headers, params: params
   
         expect(response).to have_http_status(422)
   
@@ -29,9 +30,7 @@ RSpec.describe "Choices", type: :request do
     end
 
     it "returns 422 if no params is provided" do
-        user = create(:user)
-        token = create(:token, user: user)
-        post "/choices", headers: { login: user.login, token: token.token_number }
+        post "/choices", headers: headers
   
         expect(response).to have_http_status(422)
   
@@ -40,9 +39,7 @@ RSpec.describe "Choices", type: :request do
     end
 
     it "returns 422 if no choices is provided" do
-        user = create(:user)
-        token = create(:token, user: user)
-        post "/choices", headers: { login: user.login, token: token.token_number }, params: { choice: {} }
+        post "/choices", headers: headers, params: { choice: {} }
   
         expect(response).to have_http_status(422)
   
@@ -51,9 +48,7 @@ RSpec.describe "Choices", type: :request do
     end
 
     it "returns 422 if invalid choices is provided" do
-        user = create(:user)
-        token = create(:token, user: user)
-        post "/choices", headers: { login: user.login, token: token.token_number }, params: { choice: { remote_movie_id: nil, remote_director_id: nil } }
+        post "/choices", headers: headers, params: { choice: { remote_movie_id: nil, remote_director_id: nil } }
   
         expect(response).to have_http_status(422)
   
@@ -62,7 +57,7 @@ RSpec.describe "Choices", type: :request do
     end
 
     it "returns 401 if invalid credentials is provided" do
-      post "/choices", headers: { login: Faker::Internet.username, token: rand(0..100) }, params: { choice: { remote_movie_id: rand(1..10), remote_director_id: rand(1..10) } }
+      post "/choices", headers: { login: Faker::Internet.username, token: rand(0..100) }, params: params
 
       expect(response).to have_http_status(401)
 
@@ -71,7 +66,7 @@ RSpec.describe "Choices", type: :request do
     end
 
     it "returns 401 if no credentials is provided" do
-        post "/choices", params: { choice: { remote_movie_id: rand(1..10), remote_director_id: rand(1..10) } }
+        post "/choices", params: params
   
         expect(response).to have_http_status(401)
   
