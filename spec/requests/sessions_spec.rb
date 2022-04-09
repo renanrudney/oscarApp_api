@@ -13,10 +13,10 @@ RSpec.describe "Sessions", type: :request do
       expect(data[:token]).to eq(token.token_number)
     end
 
-    it "returns 403 if invalid credentials is provided" do
+    it "returns 401 if invalid credentials is provided" do
       post "/auth", params: { login: Faker::Internet.username, password: Faker::Internet.password}
 
-      expect(response).to have_http_status(403)
+      expect(response).to have_http_status(401)
 
       data = JSON.parse(response.body, symbolize_names: true)
       expect(data[:error]).to be_truthy

@@ -3,9 +3,9 @@ class SessionsController < ApplicationController
         @user = User.find_by_login(params[:login])
         if @user&.authenticate(params[:password])
             token = Token.find_or_create_by(user: @user)
-            render json: { token: token.token_number }, status: 200
+            render json: { token: token.token_number }, status: :ok
         else
-            render json: { error: "Credenciais inválidas!" }, status: 403
+            render json: { error: "Credenciais inválidas!" }, status: :unauthorized
         end
     end
 end
