@@ -47,6 +47,11 @@ group :development, :test do
   gem 'faker'
 end
 
+group :test do
+  # Database Cleaner is a set of gems containing strategies for cleaning your database in Ruby. [https://github.com/DatabaseCleaner/database_cleaner]
+  gem 'database_cleaner-active_record'
+end
+
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
