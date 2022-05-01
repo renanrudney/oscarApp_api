@@ -10,4 +10,6 @@
 #
 class User < ApplicationRecord
     has_secure_password
+    has_one :token
+    has_one :choice
 end

@@ -14,6 +14,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_04_09_205312) do
   create_table "choices", force: :cascade do |t|
     t.integer "remote_movie_id", null: false
     t.integer "remote_director_id", null: false
+    t.string "remote_director_name", null: false
+    t.string "remote_movie_name", null: false
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

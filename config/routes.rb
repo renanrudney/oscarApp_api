@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   # root "articles#index"
   post "/auth", to: "sessions#create"
   post "/choices", to: "choices#create"
+  get "/choices", to: "choices#index"
 end
